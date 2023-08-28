@@ -45,7 +45,8 @@ class Window(tk.Tk):
                 self.camerasFrame.rowconfigure(1, minsize=540, weight=540) #2: row 1 col 1
                 self.camerasFrame.columnconfigure(0, minsize=960, weight=960)
                 self.camerasFrame.columnconfigure(1, minsize=960, weight=960)
-
+            case "3":
+                pass
 
 # for i in range(10):
 #     success, _frame = cams[0].read()
