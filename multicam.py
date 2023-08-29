@@ -59,8 +59,6 @@ class Window(tk.Tk):
         match self.numCams:
             case 1:
                 pass
-                
-
 
 # for i in range(10):
 #     success, _frame = cams[0].read()
