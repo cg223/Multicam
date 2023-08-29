@@ -53,6 +53,7 @@ class Window(tk.Tk):
                 self.camerasFrame.columnconfigure(1, minsize=960, weight=960)
                 
     def outputFrame(self):
+        print("output")
         self.cam.send(self.frames[self.currentCamera-1])
         
     def showFrames(self):
@@ -115,8 +116,8 @@ camerasFrame.grid(row=1, column=0)
 root.camerasFrame = camerasFrame
 
 root.addCamera(0)
+
 #mainloop
-while True:
-    root.updateFrames()
-    root.outputFrame()
-    #root.mainloop()
+root.after(10, updateFrames)
+root.after(10, outputFrame)
+root.mainloop()
