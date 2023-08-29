@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk, Frame, CENTER, PhotoImage, Canvas
 import cv2
 from PIL import Image, ImageTk
+import pyvirtualcam
+import numpy as np
 
 class Window(tk.Tk):
     def __init__(self):
@@ -10,8 +12,11 @@ class Window(tk.Tk):
         self.cams = []
         self.currentFrame = 0
         self.frames = []
-        self.numCams = 2
+        self.PILframes = []
+        self.numCams = 1
         self.camerasFrame = None
+        self.currentCamera = 1
+        self.cam = pyvirtualcam.Camera(width=1920, height=1080, fps=30)
         
     def addCamera(self, index):
         #adds a camera input to the Window.cams list
@@ -21,9 +26,9 @@ class Window(tk.Tk):
     def getFrame(self, index):
         #gets the current frame from a camera, and places it in the Window.frames list
         success, frame = self.cams[index].read()
-        frame = cv2.cvtColor(frame, cv2.COLORBGR2RGB)
-        PILframe = Image.fromarray(frame)
-        self.frames[index] = PILframe
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        #PILframe = Image.fromarray(frame)
+        self.frames[index] = cv2.resize(frame, (1920, 1080))
         
     def updateFrames(self):
         #for each camera, updates its frame in the Window.frames list.
@@ -40,11 +45,21 @@ class Window(tk.Tk):
                 self.camerasFrame.rowconfigure(0, minsize=960, weight=960) #1: row 0 col 1
                 self.camerasFrame.columnconfigure(0, minsize=112, weight=112)
                 self.camerasFrame.columnconfigure(1, minsize=1706, weight=1706)
+                self.cameraOne = None
             case "2":
                 self.camerasFrame.rowconfigure(0, minsize=210, weight=210) #1: row 1 col 0
                 self.camerasFrame.rowconfigure(1, minsize=540, weight=540) #2: row 1 col 1
                 self.camerasFrame.columnconfigure(0, minsize=960, weight=960)
                 self.camerasFrame.columnconfigure(1, minsize=960, weight=960)
+                
+    def outputFrame(self):
+        self.cam.send(self.frames[self.currentCamera-1])
+        
+    def showFrames(self):
+        match self.numCams:
+            case 1:
+                pass
+                
 
 
 # for i in range(10):
@@ -101,5 +116,9 @@ camerasFrame = Frame(root, bg="#111111", height=960, width=1920)
 camerasFrame.grid(row=1, column=0)
 root.camerasFrame = camerasFrame
 
+root.addCamera(0)
 #mainloop
-root.mainloop()
+while True:
+    root.updateFrames()
+    root.outputFrame()
+    root.mainloop()
