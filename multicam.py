@@ -121,4 +121,4 @@ root.addCamera(0)
 while True:
     root.updateFrames()
     root.outputFrame()
-    root.mainloop()
+    #root.mainloop()
